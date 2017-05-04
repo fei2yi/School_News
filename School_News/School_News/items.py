@@ -26,5 +26,8 @@ class DmozItem(Item):
     title = Field()
     link = Field()
     desc = Field()
+    province = Field()
+    College_sum = Field()
+    College_level = Field()
 
 
