@@ -8,26 +8,32 @@
 from scrapy.item import Item, Field
 
 
-class SchoolNewsItem(Item):
-    url = Field()
-    title = Field()
-    author = Field()
-    publish_time = Field()
-    content = Field()
-    source = Field()
-    group = Field()
-    category = Field()
-    file_urls = Field()
-    file_paths = Field()
-    file_names = Field()
-
-
-class DmozItem(Item):
-    title = Field()
-    link = Field()
-    desc = Field()
+class CollegeCityItem(Item):
     province = Field()
-    College_sum = Field()
-    College_level = Field()
+    link = Field()
+    collegeSum = Field()
+    collegeLevel = Field()
 
 
+class CollegeWebItem(Item):
+    name = Field()
+    url = Field()
+
+
+class EachArticleLinkItem(Item):
+    group = Field()
+    groupUrl = Field()
+
+    title = Field()
+    textUrl = Field()
+    publishTime = Field()
+
+
+class ArticleContentItem(Item):
+    author = Field()
+    source = Field()
+    publishTime = Field()
+    content = Field()
+    fileUrls = Field()
+    filePaths = Field()
+    fileNames = Field()
