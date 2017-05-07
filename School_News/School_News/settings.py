@@ -26,7 +26,8 @@ NEWSPIDER_MODULE = 'School_News.spiders'
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-# DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 0.25
+RANDOMIZE_DOWNLOAD_DELAY = True
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
@@ -51,15 +52,17 @@ NEWSPIDER_MODULE = 'School_News.spiders'
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-# DOWNLOADER_MIDDLEWARES = {
-#    'School_News.middlewares.MyCustomDownloaderMiddleware': 543,
-# }
+DOWNLOADER_MIDDLEWARES = {
+    # 'School_News.lib.JSMiddleware.PhantomJSMiddleware': 100,
+    # 'School_News.middlewares.MyCustomDownloaderMiddleware': 543,
+}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
 EXTENSIONS = {
     'scrapy.extensions.telnet.TelnetConsole': None,
-    'School_News.lib.feedexport.School_newsFeedExporter': 1
+    'scrapy.extensions.feedexport.FeedExporter': None,
+    'School_News.lib.feedexport.School_newsFeedExporter': 1,
 }
 
 FEED_URI = '%(file_path)s%(name)s-%(time)s%(feed_fromat)s'
@@ -70,8 +73,7 @@ FEED_EXPORT_ENCODING = 'utf-8'
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'School_News.pipelines.SchoolNewsPipeline': 300,
-    # 'School_News.pipelines.JsonWithEncodingSchool_NewsPipeline': 301,
-    # 'School_News.pipelines.MySQLStoreSchool_NewsPipeline': 302,
+    'School_News.pipelines.MySQLStoreSchool_NewsPipeline': 302,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -96,9 +98,4 @@ ITEM_PIPELINES = {
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # start MySQL database configure setting
-MYSQL_HOST = 'localhost'
-MYSQL_DBNAME = 'schoolnewsdb'
-MYSQL_USER = 'root'
-MYSQL_PASSWD = 'yyaiyi'
-port = 3306,
 # end of MySQL database configure setting
