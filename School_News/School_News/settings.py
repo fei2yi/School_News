@@ -28,6 +28,17 @@ NEWSPIDER_MODULE = 'School_News.spiders'
 # See also autothrottle settings and docs
 DOWNLOAD_DELAY = 0.25
 RANDOMIZE_DOWNLOAD_DELAY = True
+CRAWLERA_PRESERVE_DELAY = True
+
+DEFAULT_REQUEST_HEADERS = {
+
+  # 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+
+  # 'Accept-Language': 'zh-CN,zh;q=0.8',
+
+  'X-Crawlera-Cookies': 'disable'
+
+}
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
@@ -53,10 +64,17 @@ RANDOMIZE_DOWNLOAD_DELAY = True
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    # 'School_News.lib.JSMiddleware.PhantomJSMiddleware': 100,
+    'School_News.lib.JSMiddleware.PhantomJSMiddleware': 100,
     # 'School_News.middlewares.MyCustomDownloaderMiddleware': 543,
+    # 'scrapy_crawlera.CrawleraMiddleware': 600
 }
+DOWNLOAD_TIMEOUT = 10
 
+CRAWLERA_ENABLED = True
+
+CRAWLERA_USER = '<51d2d2a480e046c6b6c370cb8e52e4c9>'
+
+CRAWLERA_PASS = 'yyaiyi.sh'
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
 EXTENSIONS = {
@@ -96,6 +114,7 @@ ITEM_PIPELINES = {
 # HTTPCACHE_DIR = 'httpcache'
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-
+# REDIS_HOST = 'localhost'
+# REDIS_PORT = 6379
 # start MySQL database configure setting
 # end of MySQL database configure setting
