@@ -2,26 +2,30 @@ from scrapy.http import Request
 from School_News.items import EachListLinkItem
 from School_News.lib.loader import EachListLinkLoader
 from scrapy import Spider
+from scrapy.spiders import CrawlSpider, Rule
+from scrapy.linkextractors import LinkExtractor
+from scrapy.linkextractors.lxmlhtml import LxmlLinkExtractor
 from School_News.lib.transporturl import transport
 
 
-class ListPageCollectSpider(Spider):
-    name = 'ListPage'
+class ListCollectSpider(CrawlSpider):
+    name = 'ListCollect'
     allowed_domains = []
-    start_urls = [i for i in transport('WebsiteCollect.json', 'url')]
+    start_urls = [i for i in transport('WebsiteCollect.json', 'link')]
 
-    def start_requests(self):
-        for start_url in self.start_urls:
-            request = Request(start_url)
+    rules = (
+        Rule(LinkExtractor(allow=('(.*)xwzh_(.*)',)), callback='parse_item', follow=True),
+    )
+
+    def parse_start_url(self, response):
+            request = Request(response.url)
             # request.meta['PhantomJS'] = True
             yield request
 
-    def parse(self, response):
+    def parse_item(self, response):
         listUrls = response.xpath('//*[contains(text(),"通知") or contains(text(),"要闻") or contains(text(),"动态")'
                                   ' or contains(text(),"新闻") or contains(text(),"科研") or contains(text(),"公告")]/../..//a'
-                                  '| //span[contains(text(),"通知") or contains(text(),"要闻") or contains(text(),"动态")'
-                                  ' or contains(text(),"新闻") or contains(text(),"科研") or contains(text(),"公告")]/..//a'
-                                  '| //*[contains(@href,"/tzgg") or contains(@href,"news") or contains(@href,"xww") or contains(@href,"/gzdt")'
+                                  '|//*[contains(@href,"/tzgg") or contains(@href,"news") or contains(@href,"xww") or contains(@href,"/gzdt")'
                                   ' or contains(@href,"/xzhd/")]')
 
         for url in listUrls:
