@@ -15,6 +15,15 @@ class ListCollectSpider(CrawlSpider):
 
     rules = (
         Rule(LinkExtractor(allow=('(.*)xwzh_(.*)',)), callback='parse_item', follow=True),
+        #元素//a[contains(text(),"新闻")]
+        # 元素//a[contains(text(),"要闻")]
+        # 元素//a[contains(text(),"动态")]
+        # 元素//a[contains(text(),"新闻")]
+        # 元素//a[contains(text(),"新闻")]
+        # 元素//a[contains(text(),"新闻")]
+        # 元素//a[contains(text(),"新闻")]
+        # 元素//a[contains(text(),"新闻")]
+
     )
 
     def parse_start_url(self, response):

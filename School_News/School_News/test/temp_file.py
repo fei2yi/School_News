@@ -3,31 +3,31 @@ import pymysql
 import pymysql.cursors
 import re
 
-
-class MySQLStoreSchool_NewsPipeline(object):
-    def __init__(self):
-        self.conn = pymysql.connect(host='localhost',
-                                    port=3306,
-                                    user='root',
-                                    password='yyaiyi',
-                                    db='school_news',
-                                    charset='utf8mb4',
-                                    cursorclass=pymysql.cursors.DictCursor)
-        self.cursor = self.conn.cursor()
+#
+# class MySQLStoreSchool_NewsPipeline(object):
+#     def __init__(self):
+#         self.conn = pymysql.connect(host='localhost',
+#                                     port=3306,
+#                                     user='root',
+#                                     password='yyaiyi',
+#                                     db='school_news',
+#                                     charset='utf8mb4',
+#                                     cursorclass=pymysql.cursors.DictCursor)
+#         self.cursor = self.conn.cursor()
         # 清空表：
         # self.cursor.execute("truncate table")
         # self.conn.commit()
 
-    def new_table(self, table_name):
-        d = self.cursor.execute("select * from school_news")
-        e = self.cursor.execute("show databases")
-        if table_name not in d:
-            sql = """CREATE TABLE %s(
-                   #      list1 char(100),
-                   #      list2 char(100) ,
-                   #      list3 char(100) ,
-                   #      list4 char(100))""" % table_name
-            self.cursor.execute(sql)
+    # def new_table(self, table_name):
+    #     d = self.cursor.execute("select * from school_news")
+    #     e = self.cursor.execute("show databases")
+    #     if table_name not in d:
+    #         sql = """CREATE TABLE %s(
+    #                #      list1 char(100),
+    #                #      list2 char(100) ,
+    #                #      list3 char(100) ,
+    #                #      list4 char(100))""" % table_name
+    #         self.cursor.execute(sql)
 
             # try:
             #     # 产生异常说明此表不存在，无异常则说明表存在。
@@ -41,11 +41,11 @@ class MySQLStoreSchool_NewsPipeline(object):
             #      list4 char(100))""" % table_name
             #     self.cursor.execute(sql)
 
-    def process_item(self, item, spider):
-        # print(str(type(item)))
-        # table_name = re.split('\.|\'', str(type(item)))[-2]
-        self.new_table(item)
-        # < class 'School_News.items.CollegeCityItem'>
+    # def process_item(self, item, spider):
+    #     # print(str(type(item)))
+    #     # table_name = re.split('\.|\'', str(type(item)))[-2]
+    #     self.new_table(item)
+    #     # < class 'School_News.items.CollegeCityItem'>
 
         # try:
         #     sql = """INSERT INTO {}
@@ -65,7 +65,7 @@ class MySQLStoreSchool_NewsPipeline(object):
         #     print("Error")
 
 
-MySQLStoreSchool_NewsPipeline().process_item('a', 1)
+# MySQLStoreSchool_NewsPipeline().process_item('a', 1)
 # import re
 #
 # a="< class 'School_News.items.CollegeCityItem'>"

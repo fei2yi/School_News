@@ -12,7 +12,7 @@ class SchoolNewsPipeline(object):
         return item
 
 
-class MySQLStoreSchool_NewsPipeline(object):
+class MySQLDBPipeline(object):
     def __init__(self):
         self.conn = pymysql.connect(host='localhost',
                                     port=3306,

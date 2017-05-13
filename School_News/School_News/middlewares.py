@@ -5,7 +5,9 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
 import base64
+import random
 from scrapy import signals
+from School_News.lib.user_agents import agents
 
 
 class SchoolNewsSpiderMiddleware(object):
@@ -66,3 +68,11 @@ class ProxyMiddleware(object):
         # setup basic authentication for the proxy
         encoded_user_pass = base64.encodestring(proxy_user_pass)
         request.headers['Proxy-Authorization'] = 'Basic ' + encoded_user_pass
+
+
+class UserAgentMiddleware(object):
+    """ 换User-Agent """
+
+    def process_request(self, request, spider):
+        agent = random.choice(agents)
+        request.headers["User-Agent"] = agent
