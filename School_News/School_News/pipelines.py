@@ -66,9 +66,9 @@ class MySQLDBPipeline(object):
                 # 有异常，就会跳到这里，新建表。
                 sql = """CREATE TABLE {}(
                  pageUrl char(100),
-                 pageNum int(10) ,
-                 pageSum int(10) ,
-                 parent char(100)),
+                 pageNum char(10) ,
+                 pageSum char(10) ,
+                 parent char(100),
                  PRIMARY KEY (pageUrl))""".format(table_name)
                 self.cursor.execute(sql)
             if table_name == 'EachArticleLinkItem':
@@ -77,7 +77,7 @@ class MySQLDBPipeline(object):
                  textUrl char(100),
                  title char(40) ,
                  publishTime char(20) ,
-                 parent char(100)),
+                 parent char(100),
                  PRIMARY KEY (textUrl))""".format(table_name)
                 self.cursor.execute(sql)
             if table_name == 'ArticleContentItem':
@@ -152,7 +152,7 @@ class MySQLDBPipeline(object):
             if table_name == 'EachPagesLinkItem':
                 sql = """INSERT INTO {}
                    (pageUrl, pageNum, pageSum, parent)
-                    VALUES (%s, %d, %d, %s)""".format(table_name)
+                    VALUES (%s, %s, %s, %s)""".format(table_name)
                 self.cursor.execute(sql,
                                     (
                                         item['pageUrl'].encode('utf-8'),
