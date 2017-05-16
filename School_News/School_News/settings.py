@@ -67,25 +67,25 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
 
-DELTAFETCH_ENABLED = True
-MAGICFIELDS_ENABLED = True
-MAGIC_FIELDS = {
-    "timestamp": "$time",
-    "spider": "$spider:name",
-    "url": "scraped from $response:url",
-    "domain": "$response:url,r'https?://([\w\.]+)/']",
-}
+# DELTAFETCH_ENABLED = True
+# MAGICFIELDS_ENABLED = True
+# MAGIC_FIELDS = {
+#     "timestamp": "$time",
+#     "spider": "$spider:name",
+#     "url": "scraped from $response:url",
+#     "domain": "$response:url,r'https?://([\w\.]+)/']",
+# }
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 
 
 
-CRAWLERA_ENABLED = True
-
-CRAWLERA_USER = '<51d2d2a480e046c6b6c370cb8e52e4c9>'
-
-CRAWLERA_PASS = 'yyaiyi.sh'
+# CRAWLERA_ENABLED = True
+#
+# CRAWLERA_USER = '<51d2d2a480e046c6b6c370cb8e52e4c9>'
+#
+# CRAWLERA_PASS = 'yyaiyi.sh'
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
 
@@ -124,9 +124,9 @@ FEED_EXPORT_ENCODING = 'utf-8'
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 #启用在redis中调度存储请求队列。
-SCHEDULER = 'scrapy_redis.scheduler.Scheduler'
+# SCHEDULER = 'scrapy_redis.scheduler.Scheduler'
 #确保所有蜘蛛共享相同的重复项通过redis过滤。
-DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+# DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
 #不要清理redis队列，允许暂停/恢复爬网。
 #SCHEDULER_PERSIST = True
 
@@ -136,34 +136,34 @@ REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 
 # 去重队列的信息
-FILTER_URL = None
-FILTER_HOST = 'localhost'
-FILTER_PORT = 6379
-FILTER_DB = 0
+# FILTER_URL = None
+# FILTER_HOST = 'localhost'
+# FILTER_PORT = 6379
+# FILTER_DB = 0
 
 ITEM_PIPELINES = {
     'School_News.pipelines.SchoolNewsPipeline': 300,
     'School_News.pipelines.MySQLDBPipeline': 302,
-    'scrapy_redis.pipelines.RedisPipeline': 300,
+    # 'scrapy_redis.pipelines.RedisPipeline': 300,
 }
 
 DOWNLOADER_MIDDLEWARES = {
     'School_News.lib.JSMiddleware.PhantomJSMiddleware': 100,
     # 'School_News.middlewares.MyCustomDownloaderMiddleware': 543,
     # 'scrapy_crawlera.CrawleraMiddleware': 600
-    "Sina_spider3.middleware.UserAgentMiddleware": 401,#用户代理
+    # "School_News.middlewares.UserAgentMiddleware": 401,#用户代理
     # "Sina_spider3.middleware.CookiesMiddleware": 402,
 }
 
 EXTENSIONS = {
     'scrapy.extensions.telnet.TelnetConsole': None,
     'scrapy.extensions.feedexport.FeedExporter': None,
-    'School_News.lib.feedexport.School_newsFeedExporter': 1,
+    # 'School_News.lib.feedexport.School_newsFeedExporter': 1,
 }
 
 SPIDER_MIDDLEWARES = {
-    'scrapy_deltafetch.DeltaFetch': 50,
-    'scrapy_magicfields.MagicFieldsMiddleware': 51,
+    # 'scrapy_deltafetch.DeltaFetch': 50,
+    # 'scrapy_magicfields.MagicFieldsMiddleware': 51,
     # 'School_News.middlewares.SchoolNewsSpiderMiddleware': 543,
 }
 

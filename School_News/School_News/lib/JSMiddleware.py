@@ -35,7 +35,7 @@ class PhantomJSMiddleware(object):
             driver = webdriver.PhantomJS()
             driver.get(request.url)
 
-            driver.execute_script(js)
+            # driver.execute_script(js)
             time.sleep(1)  # 等待JS执行
 
             content = driver.page_source.encode('utf-8')

@@ -22,6 +22,7 @@ class xxxSpider(Spider):
 
 
     def parse(self, response):
+        raise KeyError('77')
         print(response.text)
         # a = response.xpath('//div[@class="manu"]/span[1]/b/text()').extract_first()
         # b = response.xpath('substring-after(//div[@class="manu"]/span[2]/text()[2], "/")').extract_first()

@@ -14,11 +14,16 @@ class CollegeWebItem(Item):
     url = Field()
     parent = Field()
 
+class EachListtempItem(Item):
+    list = Field()
+    listUrl = Field()
+
+    parent = Field()
 
 class EachListLinkItem(Item):
     list = Field()
     listUrl = Field()
-
+    xpath = Field()
     parent = Field()
 
 

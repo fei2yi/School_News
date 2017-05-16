@@ -22,9 +22,6 @@ class MySQLDBPipeline(object):
                                     charset='utf8mb4',
                                     cursorclass=pymysql.cursors.DictCursor)
         self.cursor = self.conn.cursor()
-        # 清空表：
-        # self.cursor.execute("truncate table")
-        # self.conn.commit()
 
     def new_table(self, table_name):
         try:
@@ -48,11 +45,20 @@ class MySQLDBPipeline(object):
                  parent char(100) ,
                  PRIMARY KEY (url))""".format(table_name)
                 self.cursor.execute(sql)
+            if table_name == 'EachListtempItem':
+                # 有异常，就会跳到这里，新建表。
+                sql = """CREATE TABLE {}(
+                 listUrl char(100),
+                 list char(20) ,
+                 parent char(100) ,
+                 PRIMARY KEY (listUrl))""".format(table_name)
+                self.cursor.execute(sql)
             if table_name == 'EachListLinkItem':
                 # 有异常，就会跳到这里，新建表。
                 sql = """CREATE TABLE {}(
                  listUrl char(100),
                  list char(20) ,
+                 xpath char(40) ,
                  parent char(100) ,
                  PRIMARY KEY (listUrl))""".format(table_name)
                 self.cursor.execute(sql)
@@ -118,7 +124,7 @@ class MySQLDBPipeline(object):
                                     )
                                     )
                 self.conn.commit()
-            if table_name == 'EachListLinkItem':
+            if table_name == 'EachListtempItem':
                 sql = """INSERT INTO {}
                    (list, listUrl, parent)
                     VALUES (%s, %s, %s)""".format(table_name)
@@ -126,6 +132,19 @@ class MySQLDBPipeline(object):
                                     (
                                         item['list'].encode('utf-8'),
                                         item['listUrl'].encode('utf-8'),
+                                        item['parent'].encode('utf-8'),
+                                    )
+                                    )
+                self.conn.commit()
+            if table_name == 'EachListLinkItem':
+                sql = """INSERT INTO {}
+                   (list,listUrl,xpath,parent)
+                    VALUES (%s, %s, %s,%s)""".format(table_name)
+                self.cursor.execute(sql,
+                                    (
+                                        item['list'].encode('utf-8'),
+                                        item['listUrl'].encode('utf-8'),
+                                        item['xpath'].encode('utf-8'),
                                         item['parent'].encode('utf-8'),
                                     )
                                     )
