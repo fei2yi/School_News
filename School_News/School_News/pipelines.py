@@ -83,7 +83,7 @@ class MySQLDBPipeline(object):
             if table_name == 'ArticleContentItem':
                 # 有异常，就会跳到这里，新建表。
                 sql = """CREATE TABLE {}(
-                 content VARCHAR(100),
+                 content VARCHAR(10000),
                  author char(5) ,
                  source char(10) ,
                  parent char(100) ,
@@ -95,7 +95,6 @@ class MySQLDBPipeline(object):
 
     def process_item(self, item, spider):
         table_name = re.split('\.|\'', str(type(item)))[-2]
-        print(table_name)
         self.new_table(table_name)
         # < class 'School_News.items.CollegeCityItem'>
         try:

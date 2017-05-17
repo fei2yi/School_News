@@ -6,8 +6,8 @@ from School_News.lib.transporturl import transport
 import pymysql
 
 
-class ArticleSpider(Spider):
-    name = 'article'
+class PageSpider(Spider):
+    name = 'page'
     allowed_domains = []
     conn = pymysql.connect(host='localhost',
                            port=3306,
@@ -97,6 +97,8 @@ class ArticleSpider(Spider):
         elif 'edu' in b and ('cn/' in b or 'cn' in b or 'cn/news' in b) and 'http://www' in b and len(b) == 4:
             return True
         elif 'com' in b and 'http://news' in b and len(b) == 3:
+            return True
+        elif ('com' in b or 'cn' in b) and 'http://www' in b and len(b) == 3:
             return True
         else:
             return False

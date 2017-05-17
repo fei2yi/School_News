@@ -21,6 +21,7 @@ class ListCollect2Spider(Spider):
 
     a = cursor.fetchall()
     start_urls = [[i.get('listUrl'), i.get('list'), i.get('parent')] for i in a]
+    # start_urls = [['http://60.21.141.230/news/shownr.aspx?classid=145', 'more', 'http://www.ldxy.cn/']]
 
     def start_requests(self):
         for urll in self.start_urls:
@@ -47,7 +48,7 @@ class ListCollect2Spider(Spider):
     def secondejudge(self, response):
         a = [{'div': 126}, {'ul': 66}, {'table': 56}, {'td': 32}, {'tr': 12}]
         b = [{'li': 112}, {'tr': 41}, {'td': 10}, {'div': 7}, {'ul': 6}, {'table': 6}, {'a': 5}]
-        xpath = '//{}/{}//a[@target]/ancestor::{}'
+        xpath = '//{}/{}//a/ancestor::{}'
         xpaths = []
         # body_num = response.xpath("//body/*")
         # if len(body_num) >= 3:

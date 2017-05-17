@@ -49,9 +49,9 @@ class ListCollectSpider(Spider):
 
     def firstchoose(self, response):
         a = [['a', 50], ['span', 3]]
-        b = [['text()', 50], ['@title', 2]]
+        b = [['text()', 50], ['@href', 3], ['@title', 2]]
         c = [['\"新闻\"', 195], ['\"要闻\"', 114], ['\"动态\"', 555], ['\"通知\"', 169], ['\"头条\"', 50], ['\"更多\"', 100],
-             ['\"more\"', 120], ['\"MORE\"', 20]]
+             ['\"more\"', 120], ['\"MORE\"', 20], ['\"http://news.\"', 30]]
 
         xpaths = []
         for i in a:

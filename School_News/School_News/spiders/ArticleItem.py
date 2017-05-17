@@ -22,10 +22,11 @@ class ArticleItemSpider(Spider):
                            cursorclass=pymysql.cursors.DictCursor)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM eachlistlinkitem a INNER "
-                   "JOIN eachpageslinkitem2 b ON a.listUrl = b.parent WHERE pageSum='0'")
+                   "JOIN eachpageslinkitem b ON a.listUrl = b.parent WHERE pageSum='0'")
 
     a = cursor.fetchall()
     start_urls = [[i.get('pageUrl'), i.get('xpath')] for i in a]
+
 
     def start_requests(self):
         for urll in self.start_urls:
@@ -34,13 +35,10 @@ class ArticleItemSpider(Spider):
             yield request
 
     def parse(self, response):
-        yield from self.AItem(response)
-
-    def AItem(self, response):
         xpath = response.meta.get('xpath')
-        xpath = xpath.spilt('#')
-        ul = response.xpath(xpath[0])[xpath[1]]
-        li = ul.xpath(xpath[2])
+        xp = xpath.split('#')
+        ul = response.xpath(xp[0])[int(xp[1])]
+        li = ul.xpath(xp[2])
         for index, li in enumerate(li):
             cci = EachArticleLinkLoader(item=EachArticleLinkItem(), selector=li, response=response)
             cci.add_xpath('title', './/a/text() | .//a/@title')
@@ -48,4 +46,13 @@ class ArticleItemSpider(Spider):
             cci.add_xpath('publishTime', './/span/text()')
             cci.add_value('parent', response.url)
             cciitme = cci.load_item()
+            if not cciitme.get('publishTime'):
+                cci.add_value('publishTime', 'null')
+            if not cciitme.get('title'):
+                cci.add_value('title', 'null')
+            if not cciitme.get('textUrl'):
+                cci.add_value('textUrl', 'null')
+            cciitme = cci.load_item()
+            print('---')
+            print(cciitme.get('title'), cciitme.get('textUrl'),xpath)
             yield cciitme
