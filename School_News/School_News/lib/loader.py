@@ -65,7 +65,7 @@ class EachListLinkLoader(ItemLoader):
 class EachPagesLinkLoader(ItemLoader):
     default_output_processor = TakeFirst()
 
-    pageUrl_in = MapCompose(str.strip, urljoin)
+    pageUrl_in = MapCompose(str.strip)
     pageSum_in = MapCompose(str.strip)
     pageNum_in = MapCompose(str.strip)
     parent_in = MapCompose(str.strip)

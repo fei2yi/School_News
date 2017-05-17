@@ -25,7 +25,7 @@ class ArticleSpider(Spider):
     def start_requests(self):
         for urll in self.start_urls:
             url = urll[0]
-            request = Request(url, meta={'listUrl': url, 'list': urll[1], 'xpath': urll[2], 'parent': urll[3]})
+            request = Request(url, meta={'listUrl': url, 'list': urll[1], 'xpath': urll[2], 'parent': url})
             # request.meta['PhantomJS'] = True
             yield request
 
@@ -38,7 +38,7 @@ class ArticleSpider(Spider):
         self.num += 1
         a = [['a', 300], ['div', 20], ['span', 5]]
         b = [['text()', 269], ['@title', 50], ['@class', 30], ['@href', 10]]
-        c = [['下一页', 172], ['下页', 60], ['后页', 40], ['next', 30], ['Next', 30]]
+        c = [['下一页', 172], ['下页', 60], ['后一页', 35], ['后页', 40], ['next', 25], ['Next', 20]]
         xpath = '//{}[contains({},"{}")]/@href'
         xpaths = []
 
@@ -67,47 +67,45 @@ class ArticleSpider(Spider):
             url = response.urljoin(wgy[0])
             if 'javascript' in url:
                 print('最后一页或此分页需点击:', response.url)
+                yield from self.yield_item(url, str(self.num), '点击等', response.meta.get('parent'))
             else:
                 print('url:', url, wgy[0], '权重:', wgy[1])
-
-                epll = EachPagesLinkLoader(item=EachPagesLinkItem())
-                epll.add_value('pageUrl', url)
-                epll.add_value('pageNum', str(self.num))
-                epll.add_value('pageSum', '浏览器')
-                epll.add_value('parent', response.meta.get('parent'))
-                epllitme = epll.load_item()
-                yield epllitme
-                yield Request(url, callback=self.parse, dont_filter=False, meta={'next_page': True})
+                if response.url == response.meta.get('parent'):
+                    yield from self.yield_item(response.url, str(self.num), '0', response.meta.get('parent'))
+                yield from self.yield_item(url, str(self.num), '0', response.meta.get('parent'))
+                yield Request(url, callback=self.parse, dont_filter=False,
+                              meta={'next_page': True, 'parent': response.meta.get('parent')})
         elif response.meta.get("next_page"):
             print('最后一页：', response.url)
+        elif self.Homepage(response.url):
+            yield from self.yield_item(response.url, str(self.num), '主页面', response.url)
+            print('是主页，应该删掉', response.url)
         elif '用浏览器':
-            print('用浏览器', response.url)
-            epll = EachPagesLinkLoader(item=EachPagesLinkItem(), response=response)
-            epll.add_value('pageUrl', response.url)
-            epll.add_value('pageNum', self.num)
-            epll.add_value('pageSum', 1)
-            epll.add_value('parent', response.url)
-            epllitme = epll.load_item()
-            yield epllitme
+            print('应使用浏览器打开', response.url)
+            yield from self.yield_item(response.url, str(self.num), '浏览器', response.url)
         elif '无下一页，却有一排页码':
             print('无下一页，却有一排页码', response.url)
         elif '真正的无分页':
             print('真正的无分页：', response.url)
 
-
-            # print(url)
-            # request = Request(url, callback=self.parse, meta={'parent_temp': response.meta.get('parent_temp')},
-            #                   dont_filter=False)
-            # request.meta['PhantomJS'] = True
-            # yield request
-
     def Homepage(self, url):
         b = url.split('.')
         if 'edu' in b and ('cn/' in b or 'cn' in b) and 'http://news' in b and len(b) == 4:
             return True
-        elif 'edu' in b and 'cn/index' in b and 'http://news' in b and len(b) == 5:
+        elif 'edu' in b and 'cn/index' in b and 'http://news' in b and len(b) == 5 and len(b[4]) < 6:
+            return True
+        elif 'edu' in b and ('cn/' in b or 'cn' in b or 'cn/news' in b) and 'http://www' in b and len(b) == 4:
             return True
         elif 'com' in b and 'http://news' in b and len(b) == 3:
             return True
         else:
             return False
+
+    def yield_item(self, url, pageNum, pageSum, parent):
+        epll = EachPagesLinkLoader(item=EachPagesLinkItem())
+        epll.add_value('pageUrl', url)
+        epll.add_value('pageNum', pageNum)
+        epll.add_value('pageSum', pageSum)
+        epll.add_value('parent', parent)
+        epllitme = epll.load_item()
+        yield epllitme

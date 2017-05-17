@@ -21,11 +21,7 @@ class ListCollectSpider(Spider):
                    "JOIN collegewebitem b ON a.link = b.parent WHERE collegeLevel='普通本科院校(908所)'")
 
     a = cursor.fetchall()
-    cursor.execute("SELECT a.listUrl FROM eachlisttempitem a")
-    b = cursor.fetchall()
     start_urls = [i.get('url') for i in a]
-
-    # start_urls = ['http://www.tsinghua.edu.cn/']
 
     def start_requests(self):
         for url in self.start_urls:
@@ -47,9 +43,10 @@ class ListCollectSpider(Spider):
                 yield eltlitme
                 print(url)
                 request = Request(url, callback=self.parse, meta={'parent_temp': response.meta.get('parent_temp')},
-                              dont_filter=False)
+                                  dont_filter=False)
                 request.meta['PhantomJS'] = True
                 yield request
+
     def firstchoose(self, response):
         a = [['a', 50], ['span', 3]]
         b = [['text()', 50], ['@title', 2]]
