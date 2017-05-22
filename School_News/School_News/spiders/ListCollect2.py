@@ -1,8 +1,7 @@
 from scrapy.http import Request
-from School_News.items import EachListLinkItem
-from School_News.lib.loader import EachListLinkLoader
+from School_News.items import List
+from School_News.lib.loader import ListLoader
 from scrapy import Spider
-from School_News.lib.transporturl import transport
 import pymysql
 
 
@@ -37,7 +36,7 @@ class ListCollect2Spider(Spider):
         parent = response.meta.get('parent')
         if isinstance(resl, list):
             xpath = '{}#{}#{}'.format(resl[0], resl[1], resl[2], )
-            elll = EachListLinkLoader(item=EachListLinkItem(), response=response)
+            elll = ListLoader(item=List(), response=response)
             elll.add_value('listUrl', url)
             elll.add_value('list', text)
             elll.add_value('parent', parent)
@@ -79,9 +78,9 @@ class ListCollect2Spider(Spider):
                 print(i, 'xpath2:', xpath2, len(sel2), sel2)
                 result_path.append([x_xpa, i, xpath2, len(sel2)])
             result_path1 = sorted(result_path, key=lambda d: d[3], reverse=True)[0]
-            if result_path1[3] in [5, 10, 12, 15, 20, 21, 22, 23, 24, 25, 30, ]:
-                print('精确规则的匹配：', result_path1[0], result_path1[1], result_path1[2])
+            if result_path1[3] in [15, 20]:
+                return [result_path1[0], result_path1[1], result_path1[2]]
+            if result_path1[3] in [5, 10, 12, 21, 22, 23, 24, 25, 30, ]:
                 return [result_path1[0], result_path1[1], result_path1[2]]
             if result_path1[3] > 10:
-                print('大于10规则的匹配：', result_path1[0], result_path1[1], result_path1[2])
                 return [result_path1[0], result_path1[1], result_path1[2]]

@@ -11,7 +11,7 @@ from School_News.lib.transporturl import transport
 
 
 class ArticleItemSpider(Spider):
-    name = 'articleitem'
+    name = 'articlezl'
     allowed_domains = []
     conn = pymysql.connect(host='localhost',
                            port=3306,
@@ -21,16 +21,29 @@ class ArticleItemSpider(Spider):
                            charset='utf8mb4',
                            cursorclass=pymysql.cursors.DictCursor)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM eachlistlinkitem a INNER "
-                   "JOIN eachpageslinkitem b ON a.listUrl = b.parent WHERE pageSum='0'")
+    # cursor.execute("SELECT * FROM eachlistlinkitem a INNER "
+    #                "JOIN eachpageslinkitem b ON a.listUrl = b.parent WHERE pageSum='0'")
+    #
+    # a = cursor.fetchall()
 
-    a = cursor.fetchall()
-    start_urls = [[i.get('pageUrl'), i.get('xpath')] for i in a]
+    cursor.execute("SELECT listUrl FROM eachlistlinkitem")
 
+    all_list = cursor.fetchall()
+
+    list_l = []
+    for i in all_list:
+        cursor.execute("SELECT pageUrl, xpath FROM eachlistlinkitem a INNER "
+                   "JOIN eachpageslinkitem b ON a.listUrl = b.parent WHERE(parent='{}' and pageSum='0')".format(i.get('listUrl')))
+        list_pages = cursor.fetchall()
+        list_pages = sorted(list_pages, key=lambda d: d, reverse=True)
+        list_l.append(list_pages)
+    print(list_l)
+    # start_urls = [[i.get('pageUrl'), i.get('xpath')] for i in a]
+    start_urls = [i for i in list_l]
 
     def start_requests(self):
-        for urll in self.start_urls:
-            request = Request(urll[0], meta={'listUrl': urll[0], 'xpath': urll[1]})
+        for i in self.start_urls:
+            request = Request(i.get('pageUrl'), meta={'xpath': urll[1]})
             # request.meta['PhantomJS'] = True
             yield request
 
@@ -54,5 +67,5 @@ class ArticleItemSpider(Spider):
                 cci.add_value('textUrl', 'null')
             cciitme = cci.load_item()
             print('---')
-            print(cciitme.get('title'), cciitme.get('textUrl'),xpath)
+            print(cciitme.get('title'), cciitme.get('textUrl'), xpath)
             yield cciitme

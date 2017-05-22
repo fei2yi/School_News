@@ -2,9 +2,8 @@
 from scrapy import Spider
 from scrapy.http import Request
 import pymysql
-from School_News.items import ArticleContentItem
-from School_News.lib.loader import ArticleContentLoader
-
+from School_News.items import Content
+from School_News.lib.loader import ContentLoader
 
 
 class ContentSpider(Spider):
@@ -18,7 +17,12 @@ class ContentSpider(Spider):
                            charset='utf8mb4',
                            cursorclass=pymysql.cursors.DictCursor)
     cursor = conn.cursor()
-    cursor.execute("SELECT textUrl FROM eacharticlelinkitem")
+    try:
+        cursor.execute(
+            "SELECT a.textUrl FROM eacharticlelinkitem a LEFT JOIN articlecontentitem b ON a.textUrl=b.parent"
+            "WHERE crawl!='yes'")
+    except:
+        cursor.execute("SELECT textUrl FROM eacharticlelinkitem")
 
     a = cursor.fetchall()
     start_urls = [i.get('textUrl') for i in a]
@@ -30,9 +34,9 @@ class ContentSpider(Spider):
             yield request
 
     def parse(self, response):
-        content=self.get_con(response)
+        content = self.get_con(response)
         if content:
-            acl = ArticleContentLoader(item=ArticleContentItem(), response=response)
+            acl = ContentLoader(item=Content(), response=response)
             acl.add_value('author', 'no')
             acl.add_value('source', 'no')
             acl.add_value('publishTime', 'no')
@@ -40,18 +44,20 @@ class ContentSpider(Spider):
             acl.add_value('fileUrls', 'no')
             acl.add_value('filePaths', 'no')
             acl.add_value('fileNames', 'no')
+            acl.add_value('crawl', 'yes')
+
             acl.add_value('parent', response.url)
             aclitme = acl.load_item()
-            print(response.url,content)
+            print(response.url, content)
             yield aclitme
         else:
-            print("未获取到内容:",response.url)
+            print("未获取到内容:", response.url)
 
     def get_con(self, response):
         a = [['div', 262], ['td', 33], ['table', 16], ['font', 8], ['p', 8]]
         b = [['class', 223], ['id', 88]]
         c = [['TRS_Editor', 50], ['content', 46], ['zoom', 21], ['con', 15], ['article', 15], ['text', 13],
-             ['Zoom', 12],['info_content', 8]]
+             ['Zoom', 12], ['info_content', 8]]
         xpaths = []
         for i in a:
             for o in b:
@@ -64,10 +70,10 @@ class ContentSpider(Spider):
         for x in xpaths:
             sel = response.xpath(x[0])
             if sel:
-                wgl.append([sel,x[1],x[0]])
+                wgl.append([sel, x[1], x[0]])
         if wgl:
             wgy = sorted(wgl, key=lambda d: d[1], reverse=True)[0]
-            content=wgy[0].extract_first()
+            content = wgy[0].extract_first()
             return content
         else:
             return False

@@ -1,8 +1,7 @@
 from scrapy.http import Request
-from School_News.items import EachListtempItem
-from School_News.lib.loader import EachListtempLoader
+from School_News.items import Listtemp
+from School_News.lib.loader import ListtempLoader
 from scrapy import Spider
-from School_News.lib.transporturl import transport
 import pymysql
 
 
@@ -35,7 +34,7 @@ class ListCollectSpider(Spider):
             url = url_text[0]
             text = url_text[1]
             if url not in [i.get('listUrl') for i in self.b]:
-                eltl = EachListtempLoader(item=EachListtempItem(), response=response)
+                eltl = ListtempLoader(item=Listtemp(), response=response)
                 eltl.add_value('listUrl', url)
                 eltl.add_value('list', text)
                 eltl.add_value('parent', response.meta.get('parent_temp'))

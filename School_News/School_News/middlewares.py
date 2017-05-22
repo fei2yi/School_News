@@ -8,6 +8,7 @@ import base64
 import random
 from scrapy import signals
 from School_News.lib.user_agents import agents
+from School_News.lib.Proxy import proxypool
 
 
 class SchoolNewsSpiderMiddleware(object):
@@ -61,13 +62,14 @@ class SchoolNewsSpiderMiddleware(object):
 class ProxyMiddleware(object):
     def process_request(self, request, spider):
         # Set the location of the proxy
-        request.meta['proxy'] = "http://YOUR_PROXY_IP:PORT"
+        proxy = random.choice(proxypool(1))
+        request.meta['proxy'] = proxy.get('proxy')
 
         # Use the following lines if your proxy requires authentication
-        proxy_user_pass = "USERNAME:PASSWORD"
-        # setup basic authentication for the proxy
-        encoded_user_pass = base64.encodestring(proxy_user_pass)
-        request.headers['Proxy-Authorization'] = 'Basic ' + encoded_user_pass
+        # proxy_user_pass = "USERNAME:PASSWORD"
+        # # setup basic authentication for the proxy
+        # encoded_user_pass = base64.encodestring(proxy_user_pass)
+        # request.headers['Proxy-Authorization'] = 'Basic ' + encoded_user_pass
 
 
 class UserAgentMiddleware(object):

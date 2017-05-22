@@ -28,7 +28,7 @@ class MySQLDBPipeline(object):
             # 产生异常说明此表不存在，无异常则说明表存在。
             self.cursor.execute("select * from %s" % table_name)
         except:
-            if table_name == 'CollegeCityItem':
+            if table_name == 'City':
                 # 有异常，就会跳到这里，新建表。
                 sql = """CREATE TABLE {}(
                  link char(100) ,
@@ -37,7 +37,7 @@ class MySQLDBPipeline(object):
                  collegeLevel char(20),
                  PRIMARY KEY ( link ))""".format(table_name)
                 self.cursor.execute(sql)
-            if table_name == 'CollegeWebItem':
+            if table_name == 'College':
                 # 有异常，就会跳到这里，新建表。
                 sql = """CREATE TABLE {}(
                  url char(100),
@@ -45,7 +45,7 @@ class MySQLDBPipeline(object):
                  parent char(100) ,
                  PRIMARY KEY (url))""".format(table_name)
                 self.cursor.execute(sql)
-            if table_name == 'EachListtempItem':
+            if table_name == 'Listtemp':
                 # 有异常，就会跳到这里，新建表。
                 sql = """CREATE TABLE {}(
                  listUrl char(100),
@@ -53,7 +53,7 @@ class MySQLDBPipeline(object):
                  parent char(100) ,
                  PRIMARY KEY (listUrl))""".format(table_name)
                 self.cursor.execute(sql)
-            if table_name == 'EachListLinkItem':
+            if table_name == 'List':
                 # 有异常，就会跳到这里，新建表。
                 sql = """CREATE TABLE {}(
                  listUrl char(100),
@@ -62,7 +62,7 @@ class MySQLDBPipeline(object):
                  parent char(100) ,
                  PRIMARY KEY (listUrl))""".format(table_name)
                 self.cursor.execute(sql)
-            if table_name == 'EachPagesLinkItem':
+            if table_name == 'Page':
                 # 有异常，就会跳到这里，新建表。
                 sql = """CREATE TABLE {}(
                  pageUrl char(100),
@@ -71,7 +71,7 @@ class MySQLDBPipeline(object):
                  parent char(100),
                  PRIMARY KEY (pageUrl))""".format(table_name)
                 self.cursor.execute(sql)
-            if table_name == 'EachArticleLinkItem':
+            if table_name == 'Article':
                 # 有异常，就会跳到这里，新建表。
                 sql = """CREATE TABLE {}(
                  textUrl char(100),
@@ -80,7 +80,7 @@ class MySQLDBPipeline(object):
                  parent char(100),
                  PRIMARY KEY (textUrl))""".format(table_name)
                 self.cursor.execute(sql)
-            if table_name == 'ArticleContentItem':
+            if table_name == 'Content':
                 # 有异常，就会跳到这里，新建表。
                 sql = """CREATE TABLE {}(
                  content VARCHAR(10000),
@@ -90,7 +90,8 @@ class MySQLDBPipeline(object):
                  fileUrls char(100) ,
                  filePaths char(100) ,
                  fileNames char(30) ,
-                 publishTime char(10))""".format(table_name)
+                 publishTime char(10),
+                 crawl char(3))""".format(table_name)
                 self.cursor.execute(sql)
 
     def process_item(self, item, spider):
@@ -98,7 +99,7 @@ class MySQLDBPipeline(object):
         self.new_table(table_name)
         # < class 'School_News.items.CollegeCityItem'>
         try:
-            if table_name == 'CollegeCityItem':
+            if table_name == 'City':
                 sql = """INSERT INTO {}
                    (province, link, collegeSum, collegeLevel)
                     VALUES (%s, %s, %s, %s)""".format(table_name)
@@ -111,7 +112,7 @@ class MySQLDBPipeline(object):
                                     )
                                     )
                 self.conn.commit()
-            if table_name == 'CollegeWebItem':
+            if table_name == 'College':
                 sql = """INSERT INTO {}
                    (name, url, parent)
                     VALUES (%s, %s, %s)""".format(table_name)
@@ -123,7 +124,7 @@ class MySQLDBPipeline(object):
                                     )
                                     )
                 self.conn.commit()
-            if table_name == 'EachListtempItem':
+            if table_name == 'Listtemp':
                 sql = """INSERT INTO {}
                    (list, listUrl, parent)
                     VALUES (%s, %s, %s)""".format(table_name)
@@ -135,7 +136,7 @@ class MySQLDBPipeline(object):
                                     )
                                     )
                 self.conn.commit()
-            if table_name == 'EachListLinkItem':
+            if table_name == 'List':
                 sql = """INSERT INTO {}
                    (list,listUrl,xpath,parent)
                     VALUES (%s, %s, %s,%s)""".format(table_name)
@@ -148,7 +149,7 @@ class MySQLDBPipeline(object):
                                     )
                                     )
                 self.conn.commit()
-            if table_name == 'EachPagesLinkItem':
+            if table_name == 'Page':
                 sql = """INSERT INTO {}
                    (pageUrl, pageNum, pageSum, parent)
                     VALUES (%s, %s, %s, %s)""".format(table_name)
@@ -161,7 +162,7 @@ class MySQLDBPipeline(object):
                                     )
                                     )
                 self.conn.commit()
-            if table_name == 'EachArticleLinkItem':
+            if table_name == 'Article':
                 sql = """INSERT INTO {}
                    (title, textUrl, publishTime, parent)
                     VALUES (%s, %s, %s, %s)""".format(table_name)
@@ -174,10 +175,10 @@ class MySQLDBPipeline(object):
                                     )
                                     )
                 self.conn.commit()
-            if table_name == 'ArticleContentItem':
+            if table_name == 'Content':
                 sql = """INSERT INTO {}
                    (author, source, publishTime, content,fileUrls, filePaths, fileNames, parent)
-                    VALUES (%s, %s, %s, %s,%s, %s, %s, %s)""".format(table_name)
+                    VALUES (%s, %s, %s, %s,%s, %s, %s, %s, %s)""".format(table_name)
                 self.cursor.execute(sql,
                                     (
                                         item['author'].encode('utf-8'),
@@ -188,9 +189,12 @@ class MySQLDBPipeline(object):
                                         item['filePaths'].encode('utf-8'),
                                         item['fileNames'].encode('utf-8'),
                                         item['parent'].encode('utf-8'),
+                                        item['crawl'].encode('utf-8'),
                                     )
                                     )
                 self.conn.commit()
         except pymysql.Error:
             print("cursor.execute.Error")
         return item
+
+

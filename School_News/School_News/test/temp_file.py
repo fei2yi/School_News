@@ -2,10 +2,43 @@ from datetime import date, datetime, timedelta
 import pymysql
 import pymysql.cursors
 import re
+import time, sched
 
-a = 'http://news.sasu.edu.cn/index.php'
-b = a.split('.')
-print(len(b[4]))
+
+# # 被调度触发的函数
+def event_func(msg):
+    print("Current Time:", time.time(), 'msg:', msg)
+
+    # 初始化sched模块的scheduler类
+    s = sched.scheduler(time.time, time.sleep)
+    # 设置两个调度
+    while 1:
+        s.enter(2, 2, event_func, ("Small event.",))
+        s.enter(3, 1, event_func, ("Big event.",))
+        s.run()
+    while True:
+        time.sleep(3)
+
+# a = 'http://news.sasu.edu.cn/index.php'
+# b = a.split('.')
+# print(len(b[4]))
+
+# def process_item(self, item, spider):
+#     if isinstance(item, WhoscoredNewItem):
+#         table_name = item.pop('table_name')
+#         col_str = ''
+#         row_str = ''
+#         for key in item.keys():
+#             col_str = col_str + " " + key + ","
+#             row_str = "{}'{}',".format(row_str, item[key] if "'" not in item[key] else item[key].replace("'", "\\'"))
+#             sql = "insert INTO {} ({}) VALUES ({}) ON DUPLICATE KEY UPDATE ".format(table_name, col_str[1:-1],
+#                                                                                     row_str[:-1])
+#         for (key, value) in six.iteritems(item):
+#             sql += "{} = '{}', ".format(key, value if "'" not in value else value.replace("'", "\\'"))
+#         sql = sql[:-2]
+#         self.cursor.execute(sql)  # 执行SQL
+#         self.cnx.commit()  # 写入操作
+
 #
 # class MySQLStoreSchool_NewsPipeline(object):
 #     def __init__(self):

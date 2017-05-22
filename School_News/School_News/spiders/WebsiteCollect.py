@@ -1,7 +1,7 @@
 import scrapy
 from scrapy.http import Request
-from School_News.items import CollegeCityItem, CollegeWebItem
-from School_News.lib.loader import CollegeCityLoader, CollegeWebLoader
+from School_News.items import City, College
+from School_News.lib.loader import CityLoader, CollegeLoader
 
 
 class WebsiteCollectSpider(scrapy.Spider):
@@ -15,10 +15,10 @@ class WebsiteCollectSpider(scrapy.Spider):
         College_level = []
         for lever in response.xpath('//div[@class="edu-container"]//tr[1]/th[position()>1]'):
             College_level.append(lever.xpath('text()').extract())
-        for city in response.xpath('//div[@class="edu-container"]//tr/td[@class="first"]/..'):
-            province = city.xpath('td[@class="first"]/text()').extract()
-            for index, College_category in enumerate(city.xpath('td/a/..')):
-                cci = CollegeCityLoader(item=CollegeCityItem(), selector=College_category, response=response)
+        for ct in response.xpath('//div[@class="edu-container"]//tr/td[@class="first"]/..'):
+            province = ct.xpath('td[@class="first"]/text()').extract()
+            for index, College_category in enumerate(ct.xpath('td/a/..')):
+                cci = CityLoader(item=City(), selector=College_category, response=response)
                 cci.add_value('province', province)
                 cci.add_xpath('link', 'a/@href')
                 cci.add_xpath('collegeSum', 'text()[1]')
@@ -32,7 +32,7 @@ class WebsiteCollectSpider(scrapy.Spider):
 
     def parse_list(self, response):
         for li in response.xpath('//tr[@bgcolor="#EFF7F0"]'):
-            cwi = CollegeWebLoader(item=CollegeWebItem(), selector=li)
+            cwi = CollegeLoader(item=College(), selector=li)
             cwi.add_xpath('name', './/a/text()')
             cwi.add_xpath('url', './/a/@href')
             cwi.add_value('parent', response.url)
@@ -55,7 +55,7 @@ class WebsiteCollectSpider(scrapy.Spider):
     def real_web_address(self, response):
         name = response.meta['name']
         href = response.xpath('substring-before(substring-after(//script/text(),\'replace("\'), \'")}\')').extract()
-        cwi = CollegeWebLoader(item=CollegeWebItem())
+        cwi = CollegeLoader(item=College())
         cwi.add_value('name', name)
         cwi.add_value('url', href)
         cwiitme = cwi.load_item()

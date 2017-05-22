@@ -1,7 +1,7 @@
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-from School_News.spiders.ArticleItem import ArticleItemSpider
+from School_News.spiders.Articlezl import ArticleItemSpider
 
 # from School_News.spiders.test.getpagenumSpider import xxxSpider
 

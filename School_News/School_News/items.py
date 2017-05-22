@@ -2,46 +2,42 @@
 from scrapy.item import Item, Field
 
 
-class CollegeCityItem(Item):
+class City(Item):
     province = Field()
     link = Field()
     collegeSum = Field()
     collegeLevel = Field()
 
-
-class CollegeWebItem(Item):
+class College(Item):
     name = Field()
     url = Field()
     parent = Field()
 
-class EachListtempItem(Item):
+class Listtemp(Item):
     list = Field()
     listUrl = Field()
 
     parent = Field()
 
-class EachListLinkItem(Item):
+class List(Item):
     list = Field()
     listUrl = Field()
     xpath = Field()
     parent = Field()
 
-
-class EachPagesLinkItem(Item):
+class Page(Item):
     pageUrl = Field()
     pageNum = Field()
     pageSum = Field()
     parent = Field()
 
-
-class EachArticleLinkItem(Item):
+class Article(Item):
     title = Field()
     textUrl = Field()
     publishTime = Field()
     parent = Field()
 
-
-class ArticleContentItem(Item):
+class Content(Item):
     author = Field()
     source = Field()
     publishTime = Field()
@@ -50,3 +46,4 @@ class ArticleContentItem(Item):
     filePaths = Field()
     fileNames = Field()
     parent = Field()
+    crawl=Field()

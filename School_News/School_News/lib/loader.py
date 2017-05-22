@@ -1,7 +1,7 @@
 from scrapy.loader import ItemLoader
 from scrapy.loader.processors import TakeFirst, MapCompose, Identity
-from School_News.items import CollegeCityItem, CollegeWebItem, EachArticleLinkItem, ArticleContentItem, \
-    EachListLinkItem, EachListtempItem, EachPagesLinkItem
+from School_News.items import City, College, Listtemp, List, \
+    Page, Article, Content
 
 
 def urljoin(url, loader_context):
@@ -12,7 +12,7 @@ def urljoin(url, loader_context):
         return response.urljoin(url)
 
 
-class CollegeCityLoader(ItemLoader):
+class CityLoader(ItemLoader):
     default_output_processor = TakeFirst()
 
     province_in = MapCompose(str.strip)
@@ -21,11 +21,11 @@ class CollegeCityLoader(ItemLoader):
     collegeLevel_in = MapCompose(str.strip)
 
     def __init__(self, item=None, selector=None, response=None, parent=None, **context):
-        item = item or CollegeCityItem()
-        super(CollegeCityLoader, self).__init__(item, selector, response, parent, **context)
+        item = item or City()
+        super(CityLoader, self).__init__(item, selector, response, parent, **context)
 
 
-class CollegeWebLoader(ItemLoader):
+class CollegeLoader(ItemLoader):
     default_output_processor = TakeFirst()
 
     name_in = MapCompose(str.strip)
@@ -33,11 +33,11 @@ class CollegeWebLoader(ItemLoader):
     parent_in = MapCompose(str.strip)
 
     def __init__(self, item=None, selector=None, response=None, parent=None, **context):
-        item = item or CollegeWebItem()
-        super(CollegeWebLoader, self).__init__(item, selector, response, parent, **context)
+        item = item or College()
+        super(CollegeLoader, self).__init__(item, selector, response, parent, **context)
 
 
-class EachListtempLoader(ItemLoader):
+class ListtempLoader(ItemLoader):
     default_output_processor = TakeFirst()
 
     list_in = MapCompose(str.strip)
@@ -45,11 +45,11 @@ class EachListtempLoader(ItemLoader):
     parent_in = MapCompose(str.strip)
 
     def __init__(self, item=None, selector=None, response=None, parent=None, **context):
-        item = item or EachListtempItem()
-        super(EachListtempLoader, self).__init__(item, selector, response, parent, **context)
+        item = item or Listtemp()
+        super(ListtempLoader, self).__init__(item, selector, response, parent, **context)
 
 
-class EachListLinkLoader(ItemLoader):
+class ListLoader(ItemLoader):
     default_output_processor = TakeFirst()
 
     list_in = MapCompose(str.strip)
@@ -58,11 +58,11 @@ class EachListLinkLoader(ItemLoader):
     parent_in = MapCompose(str.strip)
 
     def __init__(self, item=None, selector=None, response=None, parent=None, **context):
-        item = item or EachListLinkItem()
-        super(EachListLinkLoader, self).__init__(item, selector, response, parent, **context)
+        item = item or List()
+        super(ListLoader, self).__init__(item, selector, response, parent, **context)
 
 
-class EachPagesLinkLoader(ItemLoader):
+class PageLoader(ItemLoader):
     default_output_processor = TakeFirst()
 
     pageUrl_in = MapCompose(str.strip)
@@ -71,11 +71,11 @@ class EachPagesLinkLoader(ItemLoader):
     parent_in = MapCompose(str.strip)
 
     def __init__(self, item=None, selector=None, response=None, parent=None, **context):
-        item = item or EachPagesLinkItem()
-        super(EachPagesLinkLoader, self).__init__(item, selector, response, parent, **context)
+        item = item or Page()
+        super(PageLoader, self).__init__(item, selector, response, parent, **context)
 
 
-class EachArticleLinkLoader(ItemLoader):
+class ArticleLoader(ItemLoader):
     default_output_processor = TakeFirst()
 
     title_in = MapCompose(str.strip)
@@ -84,11 +84,11 @@ class EachArticleLinkLoader(ItemLoader):
     parent_in = MapCompose(str.strip, urljoin)
 
     def __init__(self, item=None, selector=None, response=None, parent=None, **context):
-        item = item or EachArticleLinkItem()
-        super(EachArticleLinkLoader, self).__init__(item, selector, response, parent, **context)
+        item = item or Article()
+        super(ArticleLoader, self).__init__(item, selector, response, parent, **context)
 
 
-class ArticleContentLoader(ItemLoader):
+class ContentLoader(ItemLoader):
     default_output_processor = TakeFirst()
 
     author_in = MapCompose(str.strip)
@@ -103,5 +103,5 @@ class ArticleContentLoader(ItemLoader):
     file_urls_out = Identity()
 
     def __init__(self, item=None, selector=None, response=None, parent=None, **context):
-        item = item or ArticleContentItem()
-        super(ArticleContentLoader, self).__init__(item, selector, response, parent, **context)
+        item = item or Content()
+        super(ContentLoader, self).__init__(item, selector, response, parent, **context)

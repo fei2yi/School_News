@@ -1,8 +1,7 @@
 from scrapy.http import Request
-from School_News.items import EachPagesLinkItem
-from School_News.lib.loader import EachPagesLinkLoader
+from School_News.items import Page
+from School_News.lib.loader import PageLoader
 from scrapy import Spider
-from School_News.lib.transporturl import transport
 import pymysql
 
 
@@ -104,7 +103,7 @@ class PageSpider(Spider):
             return False
 
     def yield_item(self, url, pageNum, pageSum, parent):
-        epll = EachPagesLinkLoader(item=EachPagesLinkItem())
+        epll = PageLoader(item=Page())
         epll.add_value('pageUrl', url)
         epll.add_value('pageNum', pageNum)
         epll.add_value('pageSum', pageSum)

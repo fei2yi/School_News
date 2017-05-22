@@ -123,12 +123,12 @@ FEED_EXPORT_ENCODING = 'utf-8'
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-#启用在redis中调度存储请求队列。
+# 启用在redis中调度存储请求队列。
 # SCHEDULER = 'scrapy_redis.scheduler.Scheduler'
-#确保所有蜘蛛共享相同的重复项通过redis过滤。
+# 确保所有蜘蛛共享相同的重复项通过redis过滤。
 # DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
-#不要清理redis队列，允许暂停/恢复爬网。
-#SCHEDULER_PERSIST = True
+# 不要清理redis队列，允许暂停/恢复爬网。
+# SCHEDULER_PERSIST = True
 
 # 种子队列的信息
 REDIE_URL = None
@@ -148,6 +148,7 @@ ITEM_PIPELINES = {
 }
 
 DOWNLOADER_MIDDLEWARES = {
+    # "School_News.middlewares.ProxyMiddleware": 50,
     'School_News.lib.JSMiddleware.PhantomJSMiddleware': 100,
     # 'School_News.middlewares.MyCustomDownloaderMiddleware': 543,
     # 'scrapy_crawlera.CrawleraMiddleware': 600
@@ -167,12 +168,11 @@ SPIDER_MIDDLEWARES = {
     # 'School_News.middlewares.SchoolNewsSpiderMiddleware': 543,
 }
 
-#广泛抓取
-COOKIES_ENABLED = False   #禁用Cookie
-RETRY_ENABLED = False   #禁用重试
-REDIRECT_ENABLED = False   #禁用重定向
-DOWNLOAD_TIMEOUT = 15  #减少下载超时
-LOG_LEVEL = 'INFO'   #降低日志级别
-CONCURRENT_REQUESTS = 20   #增加全局并发请求数
-REACTOR_THREADPOOL_MAXSIZE = 20  #增加Twisted IO线程池的最大大小
-
+# 广泛抓取
+COOKIES_ENABLED = False  # 禁用Cookie
+RETRY_ENABLED = False  # 禁用重试
+REDIRECT_ENABLED = False  # 禁用重定向
+DOWNLOAD_TIMEOUT = 15  # 减少下载超时
+LOG_LEVEL = 'INFO'  # 降低日志级别
+CONCURRENT_REQUESTS = 20  # 增加全局并发请求数
+REACTOR_THREADPOOL_MAXSIZE = 20  # 增加Twisted IO线程池的最大大小
