@@ -1,14 +1,12 @@
-# -*- coding: utf-8 -*-
-import scrapy
-from scrapy import Spider
 from scrapy.http import Request
+from School_News.items import Page, Article
+from School_News.lib.loader import PageLoader, ArticleLoader
+from scrapy import Spider
 import pymysql
-from School_News.items import Article
-from School_News.lib.loader import ArticleLoader
 
 
-class ArticleSpider(Spider):
-    name = 'article'
+class PageSpider(Spider):
+    name = 'page'
     allowed_domains = []
     conn = pymysql.connect(host='localhost',
                            port=3306,
@@ -19,19 +17,36 @@ class ArticleSpider(Spider):
                            cursorclass=pymysql.cursors.DictCursor)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM eachlistlinkitem a INNER "
-                   "JOIN eachpageslinkitem b ON a.listUrl = b.parent WHERE pageSum='0'")
+                   "JOIN eachpageslinkitem b ON a.listUrl = b.parent")
 
     a = cursor.fetchall()
     start_urls = [[i.get('pageUrl'), i.get('xpath')] for i in a]
 
-
     def start_requests(self):
         for urll in self.start_urls:
-            request = Request(urll[0], meta={'listUrl': urll[0], 'xpath': urll[1]})
+            url = urll[0]
+            request = Request(url, meta={'listUrl': url, 'list': urll[1], 'xpath': urll[2], 'parent': url})
             # request.meta['PhantomJS'] = True
             yield request
 
     def parse(self, response):
+        yield from self.nextpage(response)
+
+    num = 0
+
+    def nextpage(self, response):
+        pass
+
+    def yield_item(self, url, pageNum, pageSum, parent):
+        epll = PageLoader(item=Page())
+        epll.add_value('pageUrl', url)
+        epll.add_value('pageNum', pageNum)
+        epll.add_value('pageSum', pageSum)
+        epll.add_value('parent', parent)
+        epllitme = epll.load_item()
+        yield epllitme
+
+    def parse_item(self, response):
         xpath = response.meta.get('xpath')
         xp = xpath.split('#')
         ul = response.xpath(xp[0])[int(xp[1])]
@@ -51,5 +66,5 @@ class ArticleSpider(Spider):
                 cci.add_value('textUrl', 'null')
             cciitme = cci.load_item()
             print('---')
-            print(cciitme.get('title'), cciitme.get('textUrl'),xpath)
+            print(cciitme.get('title'), cciitme.get('textUrl'), xpath)
             yield cciitme

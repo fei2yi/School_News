@@ -64,14 +64,15 @@ class PageSpider(Spider):
         if len(wgl) > 0:
             wgy = sorted(wgl, key=lambda d: d[1], reverse=True)[0]
             url = response.urljoin(wgy[0])
-            if 'javascript' in url:
+            if 'javascript' or 'onclick' in url:
                 print('最后一页或此分页需点击:', response.url)
-                yield from self.yield_item(url, str(self.num), '点击等', response.meta.get('parent'))
+                yield from self.yield_item(url, str(0), '点击', response.meta.get('parent'))
             else:
                 print('url:', url, wgy[0], '权重:', wgy[1])
                 if response.url == response.meta.get('parent'):
-                    yield from self.yield_item(response.url, str(self.num), '0', response.meta.get('parent'))
-                yield from self.yield_item(url, str(self.num), '0', response.meta.get('parent'))
+                    self.num = 1
+                    yield from self.yield_item(response.url, str(self.num), '普通', response.meta.get('parent'))
+                yield from self.yield_item(url, str(self.num), '普通', response.meta.get('parent'))
                 yield Request(url, callback=self.parse, dont_filter=False,
                               meta={'next_page': True, 'parent': response.meta.get('parent')})
         elif response.meta.get("next_page"):
