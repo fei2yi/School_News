@@ -5,8 +5,8 @@ from scrapy import Spider
 import pymysql
 
 
-class ListCollect2Spider(Spider):
-    name = 'ListCollect2'
+class List2Spider(Spider):
+    name = 'List2'
     allowed_domains = []
     conn = pymysql.connect(host='localhost',
                            port=3306,

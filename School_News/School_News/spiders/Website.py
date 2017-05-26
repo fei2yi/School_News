@@ -4,7 +4,7 @@ from School_News.items import City, College
 from School_News.lib.loader import CityLoader, CollegeLoader
 
 
-class WebsiteCollectSpider(scrapy.Spider):
+class WebsiteSpider(scrapy.Spider):
     name = "Website"
     allowed_domains = ["hao123.com", "baidu.com"]
     start_urls = [

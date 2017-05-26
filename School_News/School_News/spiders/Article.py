@@ -10,8 +10,8 @@ from scrapy.linkextractors import LinkExtractor
 from School_News.lib.transporturl import transport
 
 
-class ArticleItemSpider(Spider):
-    name = 'articleitem'
+class ArticleSpider(Spider):
+    name = 'article'
     allowed_domains = []
     conn = pymysql.connect(host='localhost',
                            port=3306,
