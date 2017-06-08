@@ -1,21 +1,17 @@
 # -*- coding: utf-8 -*-
 from scrapy import Spider
 from scrapy.http import Request
-import pymysql
 from School_News.items import Content
 from School_News.lib.loader import ContentLoader
+from School_News.lib.data_clean import *
+import random
+from School_News.lib.judge import *
 
 
 class ContentSpider(Spider):
     name = 'content'
     allowed_domains = []
-    conn = pymysql.connect(host='localhost',
-                           port=3306,
-                           user='root',
-                           password='yyaiyi',
-                           db='school_news',
-                           charset='utf8mb4',
-                           cursorclass=pymysql.cursors.DictCursor)
+    conn = conn_database()
     cursor = conn.cursor()
     try:
         cursor.execute(
@@ -26,7 +22,7 @@ class ContentSpider(Spider):
 
     a = cursor.fetchall()
     start_urls = [i.get('textUrl') for i in a]
-
+    random.shuffle(start_urls)
     def start_requests(self):
         for url in self.start_urls:
             request = Request(url)
@@ -36,6 +32,9 @@ class ContentSpider(Spider):
     def parse(self, response):
         content = self.get_con(response)
         if content:
+            soup = BeautifulSoup(content, 'lxml')
+            node = soup.find('div')
+            content = extract_text(node, text_re='返回顶部')
             acl = ContentLoader(item=Content(), response=response)
             acl.add_value('author', 'no')
             acl.add_value('source', 'no')
@@ -45,7 +44,6 @@ class ContentSpider(Spider):
             acl.add_value('filePaths', 'no')
             acl.add_value('fileNames', 'no')
             acl.add_value('crawl', 'yes')
-
             acl.add_value('parent', response.url)
             aclitme = acl.load_item()
             print(response.url, content)
@@ -62,7 +60,7 @@ class ContentSpider(Spider):
         for i in a:
             for o in b:
                 for p in c:
-                    xpath = "//{}[contains(@{},'{}')]".format(i[0], o[0], p[0])
+                    xpath = "//{}[contains(@{},'{}')]/..".format(i[0], o[0], p[0])
                     weiget = i[1] * o[1] * p[1]
                     xpaths.append([xpath, weiget])
         xpaths = sorted(xpaths, key=lambda d: d[1], reverse=True)

@@ -16,7 +16,7 @@ class PageSpider(Spider):
                            charset='utf8mb4',
                            cursorclass=pymysql.cursors.DictCursor)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM eachlistlinkitem a")
+    cursor.execute("SELECT * FROM list")
 
     a = cursor.fetchall()
     start_urls = [[i.get('listUrl'), i.get('list'), i.get('xpath'), i.get('parent')] for i in a]

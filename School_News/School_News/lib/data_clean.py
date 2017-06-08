@@ -1,8 +1,7 @@
-from School_News.test.ex import *
-from bs4 import BeautifulSoup, Tag, NavigableString
+# coding=gbk
 import re
-import numpy
-import matplotlib
+from School_News.lib.ex import *
+from bs4 import BeautifulSoup, Tag, NavigableString
 
 
 def save_html(html):
@@ -47,11 +46,13 @@ def iter_tree(ele, text_re=None):
         return ''
 
 
-b = get('http://dbj.nea.gov.cn/ywdt/201703/t20170316_2813095.html')
-soup = BeautifulSoup(b.text, 'lxml')
-node = soup.find('div', attrs={'class': 'news-content-main'})
+# b = get('http://dbj.nea.gov.cn/ywdt/201703/t20170316_2813095.html')
 
-extract_text(node, text_re='è¿”å›žé¡¶éƒ¨')
-print(extract_text(node, text_re='è¿”å›žé¡¶éƒ¨'))
-
-print(iter_tree(node, text_re='è¿”å›žé¡¶éƒ¨'))
+# text=''
+# soup = BeautifulSoup(text, 'lxml')
+# node = soup.find('div')
+#
+# extract_text(node, text_re='·µ»Ø¶¥²¿')
+# print(extract_text(node, text_re='·µ»Ø¶¥²¿'))
+#
+# print(iter_tree(node, text_re='·µ»Ø¶¥²¿'))

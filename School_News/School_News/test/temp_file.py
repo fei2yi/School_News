@@ -1,23 +1,48 @@
 from datetime import date, datetime, timedelta
 import pymysql
-import pymysql.cursors
 import re
 import time, sched
+import random
 
+
+def process_item(self, item, spider):
+    table_name = re.split('\.|\'', str(type(item)))[-2]
+    sql = """INSERT INTO {} (name, url, parent,child)
+        VALUES (%s,)""".format(table_name)
+    self.cursor.execute(sql,(
+                            item['name'].encode('utf-8'),))
+    self.conn.commit()
+
+
+# li = ['dada', 'www', 'wweee']
+# random.shuffle(li)
+# print(li)
+# tag_attr = [
+#     (['table', 'thead', 'tbody', 'tfoot', 'th', 'tr', 'td'],
+#      ['style', 'align', 'valign', 'width', 'colspan', 'rowspan']),
+#     # (['img'],
+#     # ['width', 'height', 'src'])
+# ]
+# tag_attr = {k: vs for ks, vs in tag_attr for k in ks}
+# for ks, vs in tag_attr:
+#     print(ks,vs)
+# print(tag_attr)
+# str = input("Enter your input: ")
+# print(str)
 
 # # 被调度触发的函数
-def event_func(msg):
-    print("Current Time:", time.time(), 'msg:', msg)
-
-    # 初始化sched模块的scheduler类
-    s = sched.scheduler(time.time, time.sleep)
-    # 设置两个调度
-    while 1:
-        s.enter(2, 2, event_func, ("Small event.",))
-        s.enter(3, 1, event_func, ("Big event.",))
-        s.run()
-    while True:
-        time.sleep(3)
+# def event_func(msg):
+#     print("Current Time:", time.time(), 'msg:', msg)
+#
+#     # 初始化sched模块的scheduler类
+#     s = sched.scheduler(time.time, time.sleep)
+#     # 设置两个调度
+#     while 1:
+#         s.enter(2, 2, event_func, ("Small event.",))
+#         s.enter(3, 1, event_func, ("Big event.",))
+#         s.run()
+#     while True:
+#         time.sleep(3)
 
 # a = 'http://news.sasu.edu.cn/index.php'
 # b = a.split('.')
@@ -40,20 +65,20 @@ def event_func(msg):
 #         self.cnx.commit()  # 写入操作
 
 #
-# class MySQLStoreSchool_NewsPipeline(object):
-#     def __init__(self):
-#         self.conn = pymysql.connect(host='localhost',
-#                                     port=3306,
-#                                     user='root',
-#                                     password='yyaiyi',
-#                                     db='school_news',
-#                                     charset='utf8mb4',
-#                                     cursorclass=pymysql.cursors.DictCursor)
-#         self.cursor = self.conn.cursor()
-# 清空表：
-# self.cursor.execute("truncate table")
-# self.conn.commit()
 
+def aww():
+    conn = pymysql.connect(host='localhost',
+                                port=3306,
+                                user='root',
+                                password='yyaiyi',
+                                db='school_news',
+                                charset='utf8mb4',
+                                cursorclass=pymysql.cursors.DictCursor)
+    cursor = conn.cursor()
+    sql = """IF EXISTS Listtemp"""
+    cursor.execute(sql)
+    conn.commit()
+aww()
 # def new_table(self, table_name):
 #     d = self.cursor.execute("select * from school_news")
 #     e = self.cursor.execute("show databases")

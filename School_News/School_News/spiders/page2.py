@@ -5,8 +5,8 @@ from scrapy import Spider
 import pymysql
 
 
-class PageSpider(Spider):
-    name = 'page'
+class Page2Spider(Spider):
+    name = 'pa2ge'
     allowed_domains = []
     conn = pymysql.connect(host='localhost',
                            port=3306,

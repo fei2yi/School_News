@@ -3,8 +3,11 @@ from twisted.enterprise import adbapi
 from datetime import datetime
 from hashlib import md5
 import re
+import sys
 import pymysql
 import pymysql.cursors
+from datetime import datetime
+from School_News.lib.common_lib import write_file
 
 
 class SchoolNewsPipeline(object):
@@ -114,13 +117,14 @@ class MySQLDBPipeline(object):
                 self.conn.commit()
             if table_name == 'College':
                 sql = """INSERT INTO {}
-                   (name, url, parent)
-                    VALUES (%s, %s, %s)""".format(table_name)
+                   (name, url, parent,child)
+                    VALUES (%s, %s, %s ,%s)""".format(table_name)
                 self.cursor.execute(sql,
                                     (
                                         item['name'].encode('utf-8'),
                                         item['url'].encode('utf-8'),
                                         item['parent'].encode('utf-8'),
+                                        0
                                     )
                                     )
                 self.conn.commit()
@@ -132,7 +136,7 @@ class MySQLDBPipeline(object):
                                     (
                                         item['list'].encode('utf-8'),
                                         item['listUrl'].encode('utf-8'),
-                                        item['parent'].encode('utf-8'),
+                                        item['parent'].encode('utf-8')
                                     )
                                     )
                 self.conn.commit()
@@ -177,7 +181,7 @@ class MySQLDBPipeline(object):
                 self.conn.commit()
             if table_name == 'Content':
                 sql = """INSERT INTO {}
-                   (author, source, publishTime, content,fileUrls, filePaths, fileNames, parent)
+                   (author, source, publishTime, content,fileUrls, filePaths, fileNames, parent,crawl)
                     VALUES (%s, %s, %s, %s,%s, %s, %s, %s, %s)""".format(table_name)
                 self.cursor.execute(sql,
                                     (
@@ -193,8 +197,16 @@ class MySQLDBPipeline(object):
                                     )
                                     )
                 self.conn.commit()
-        except pymysql.Error:
-            print("cursor.execute.Error")
+        except:
+            write_file('pymysql_Error.txt', item['textUrl'] + ' ' + str(sys.exc_info())+' '+str(datetime.now())+'\n')
         return item
 
 
+
+        #     try:
+        #         item['listUrl']
+        #     except KeyError:
+        #         write_file('pymysql_Error.txt', item['parent'] + ' ' + 'KeyError')
+        #     write_file('pymysql_Error.txt', item['listUrl'] + ' ' + 'pymysql.Error')
+        # except pymysql.err.IntegrityError:
+        #     write_file('pymysql_Error.txt', item['listUrl'] + ' ' + 'pymysql.err.IntegrityError')

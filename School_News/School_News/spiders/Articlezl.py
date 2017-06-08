@@ -7,10 +7,9 @@ from School_News.items import Article
 from School_News.lib.loader import ArticleLoader
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
-from School_News.lib.transporturl import transport
 
 
-class ArticleItemSpider(Spider):
+class ArticlezlSpider(Spider):
     name = 'articlezl'
     allowed_domains = []
     conn = pymysql.connect(host='localhost',
@@ -31,19 +30,19 @@ class ArticleItemSpider(Spider):
     all_list = cursor.fetchall()
 
     list_l = []
-    for i in all_list:
-        cursor.execute("SELECT pageUrl, xpath FROM eachlistlinkitem a INNER "
-                   "JOIN eachpageslinkitem b ON a.listUrl = b.parent WHERE(parent='{}' and pageSum='0')".format(i.get('listUrl')))
-        list_pages = cursor.fetchall()
-        list_pages = sorted(list_pages, key=lambda d: d, reverse=True)
-        list_l.append(list_pages)
+    # for i in all_list:
+    #     cursor.execute("SELECT pageUrl, xpath FROM eachlistlinkitem a INNER "
+    #                "JOIN eachpageslinkitem b ON a.listUrl = b.parent WHERE(parent='{}' and pageSum='0')".format(i.get('listUrl')))
+    #     list_pages = cursor.fetchall()
+    #     list_pages = sorted(list_pages, key=lambda d: d, reverse=True)
+    #     list_l.append(list_pages)
     print(list_l)
     # start_urls = [[i.get('pageUrl'), i.get('xpath')] for i in a]
     start_urls = [i for i in list_l]
 
     def start_requests(self):
         for i in self.start_urls:
-            request = Request(i.get('pageUrl'), meta={'xpath': urll[1]})
+            request = Request(i.get('pageUrl'), meta={'xpath': i.get('xpath')})
             # request.meta['PhantomJS'] = True
             yield request
 

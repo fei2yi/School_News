@@ -1,8 +1,5 @@
-from scrapy.crawler import CrawlerProcess
-from scrapy.utils.project import get_project_settings
 
-from School_News.spiders.test.getpagenumSpider import xxxSpider
+from scrapy import cmdline
 
-process = CrawlerProcess(get_project_settings())
-process.crawl(xxxSpider)
-process.start()
+cmdline.execute("scrapy crawl music".split())
+cmdline.execute("scrapy crawl video".split())

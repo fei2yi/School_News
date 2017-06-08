@@ -3,27 +3,23 @@ import scrapy
 from scrapy import Spider
 from scrapy.http import Request
 import pymysql
+import random
 from School_News.items import Article
 from School_News.lib.loader import ArticleLoader
+from School_News.lib.judge import *
 
 
 class ArticleSpider(Spider):
     name = 'article'
     allowed_domains = []
-    conn = pymysql.connect(host='localhost',
-                           port=3306,
-                           user='root',
-                           password='yyaiyi',
-                           db='school_news',
-                           charset='utf8mb4',
-                           cursorclass=pymysql.cursors.DictCursor)
-    cursor = conn.cursor()
+    conn = conn_database()
+    cursor=conn.cursor()
     cursor.execute("SELECT * FROM eachlistlinkitem a INNER "
                    "JOIN eachpageslinkitem b ON a.listUrl = b.parent WHERE pageSum='0'")
 
     a = cursor.fetchall()
     start_urls = [[i.get('pageUrl'), i.get('xpath')] for i in a]
-
+    random.shuffle(start_urls)
 
     def start_requests(self):
         for urll in self.start_urls:

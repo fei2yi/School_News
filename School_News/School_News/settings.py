@@ -29,7 +29,7 @@ NEWSPIDER_MODULE = 'School_News.spiders'
 DOWNLOAD_DELAY = 1  # 下载延迟
 RANDOMIZE_DOWNLOAD_DELAY = True
 CRAWLERA_PRESERVE_DELAY = True
-
+DEPTH_LIMIT=2
 # DEFAULT_REQUEST_HEADERS = {
 #
 #     # 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
